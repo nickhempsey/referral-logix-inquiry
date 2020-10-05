@@ -6,20 +6,25 @@
     Author: Referralogix
 */
 
+
 // Enqueue Scripts and Stylesheets
 add_action('wp_enqueue_scripts', 'referralogix_enqueue');
-add_action('admin_enqueue_scripts', 'referralogix_enqueue');
 function referralogix_enqueue() {
 
     wp_enqueue_style( 'referralogix_css', plugins_url('/assets/css/styles.css', __FILE__), '1.0');
-
-    if(!is_admin()) {
-        wp_enqueue_script( 'referralogix_js',plugins_url('/assets/js/script.js', __FILE__) , array( 'jquery'),'1.0' );
-    } else {
-	    wp_enqueue_script( 'referralogix_admin_js',plugins_url('/assets/js/admin.js', __FILE__) , array( 'jquery'),'1.0' );
-    }
     
+	wp_enqueue_script( 'referralogix_js',plugins_url('/assets/js/script.js', __FILE__) , array( 'jquery'),'1.0' );
+	
 }
+
+
+// Admin Script
+add_action('admin_enqueue_scripts', 'referralogix_admin_enqueue');
+function referralogix_admin_enqueue() {
+	
+	wp_enqueue_script( 'referralogix_admin_js',plugins_url('/assets/js/admin.js', __FILE__) , array( 'jquery'),'1.0' );
+}
+
 
 // Include
 include_once( plugin_dir_path( __FILE__ ) .'/admin.php');

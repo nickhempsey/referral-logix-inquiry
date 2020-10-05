@@ -2,7 +2,7 @@
 
 add_action( 'admin_menu', 'referrallogix_inquiry_add_settings_page' );
 function referrallogix_inquiry_add_settings_page() {
-    add_options_page( 'inquiry', 'Referralogix Inquiry', 'manage_options', "inquiry-plugin", 'referrallogix_inquiry_plugin_settings_page' );
+    add_options_page( 'inquiry', 'Referralogix Inquiry', 'manage_options', "referrallogix-inquiry", 'referrallogix_inquiry_plugin_settings_page' );
 }
 
 function referrallogix_inquiry_plugin_settings_page() {
@@ -22,7 +22,7 @@ function referrallogix_inquiry_plugin_settings_page() {
             if(isset($_POST['insert'])) {
                 add_option('referrallogix_qsi_key',trim($_POST['site_qsi']));
                 add_option('referrallogix_api_key',trim($_POST['api_key']));
-            }else{
+            } else {
                 update_option('referrallogix_qsi_key',trim($_POST['site_qsi']));
                 update_option('referrallogix_api_key',trim($_POST['api_key']));
             }
