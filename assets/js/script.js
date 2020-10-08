@@ -1,23 +1,26 @@
 jQuery(document).ready(function($) {
     var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-    var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    var	emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;    	
+    
     $(document).on('click','.expandFormButton',function () {
         $('.moreForm').removeClass('displayNone');
         $('.expandForm').addClass('displayNone');
         return false;
     });
-    $(document).on('click','.rl-inquiry-form .closeAlert',function () {
+    $(document).on('click','.rl-inquiry-form .rl-inquiry-closeAlert',function () {
         $('.alertMsg').addClass('displayNone');
+        $('.rl-inquiry-form').fadeOut().attr('data-status', 'closed');
+        $('.rl-inquiry-popup-opener').attr('data-status', 'closed').removeClass('rl-inquiry-shadow');
     });
     $(document).on('click','.rl-inquiry-popup-opener',function () {
         var status = $(this).attr('data-status');
         if(status == 'closed'){
-            $('.rl-inquiry-form').removeClass('displayNone').attr('data-status', 'open');
-            $(this).attr('data-status', 'open');
+            $('.rl-inquiry-form').removeClass('displayNone').attr('data-status', 'open').addClass('rl-inquiry-shadow');
+            $(this).attr('data-status', 'open').addClass('rl-inquiry-shadow');
         }
         else{
-            $('.rl-inquiry-form').addClass('displayNone').attr('data-status', 'closed');
-            $(this).attr('data-status', 'closed');
+            $('.rl-inquiry-form').addClass('displayNone').attr('data-status', 'closed').removeClass('rl-inquiry-shadow');
+            $(this).attr('data-status', 'closed').removeClass('rl-inquiry-shadow');
         }
     });
     

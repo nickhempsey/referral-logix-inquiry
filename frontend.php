@@ -52,7 +52,7 @@ function referrallogix_frontend_inquiry_form() {
 	
 	    ?>
 	    <div class="rl-inquiry rl-inquiry-form <?= $apiResponse; ?>" data-status="<?= $inquiryStatus; ?>">
-	        <div class="rl-inquiry-header">Lets start a text conversation</div>
+	        <div class="rl-inquiry-header">Let's start a text conversation</div>
 	        <div class="rl-inquiry-subHead">Click Send after completing at least the first 3 fields below and one of our staff members will contact you shortly.</div>
 	        <div class="rl-inquiry-box">
 	            <form class="patientInquiryForm" action="" method="post">
@@ -85,15 +85,15 @@ function referrallogix_frontend_inquiry_form() {
 	                <div class="expandForm">
 	                    Click <a href="" class="expandFormButton">here</a> to provide optional additional information that could help us help you quicker.
 	                </div>
-	                <button type="button" class="rl-inquiry-submit">Send</button>
+	                <button type="button" class="rl-inquiry-submit">SEND</button>
 	            </form>
 	        </div>
 	        <div class="alertMsg <?= $apiResponse;?>">
 	            <div class="alertText"><?= $apiResponseMessage;?></div>
-	            <button type="button" class="closeAlert">OK</button>
+	            <button type="button" class="rl-inquiry-closeAlert">OK</button>
 	        </div>
 	        <div class="rl-inquiry-subFooter">
-	            By clicking the send button, you agree to receive text messages at the mobile phone number provided. Depending upon you mobile service, messages/data rates may apply
+	            By clicking the SEND button, you agree to receive text messages at the mobile phone number provided. Depending upon you mobile service, messages/data rates may apply
 	        </div>
 	        <div class="rl-inquiry-footer">
 	            <img src="<?= $root_path;?>/assets/images/rlogix.png" class="footerImage">
