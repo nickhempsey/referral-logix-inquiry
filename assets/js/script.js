@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+    history.pushState({}, "", ""); //to avoid form submission on page reload.
     var phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
     var	emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;    	
     
@@ -14,8 +15,9 @@ jQuery(document).ready(function($) {
     });
     $(document).on('click','.rl-inquiry-popup-opener',function () {
         var status = $(this).attr('data-status');
+        console.log('status',status);
         if(status == 'closed'){
-            $('.rl-inquiry-form').removeClass('displayNone').attr('data-status', 'open').addClass('rl-inquiry-shadow');
+            $('.rl-inquiry-form').removeClass('displayNone').attr('data-status', 'open').addClass('rl-inquiry-shadow').css('display','block');
             $(this).attr('data-status', 'open').addClass('rl-inquiry-shadow');
         }
         else{
@@ -24,23 +26,22 @@ jQuery(document).ready(function($) {
         }
     });
     
-    
     $(document).on('click','.rl-inquiry-form .rl-inquiry-submit', function () {
         var formFlag = true;
         var name = $('.rl-inquiry-form .name').val();
         var phone = $('.rl-inquiry-form .phone').val();
         var message = $('.rl-inquiry-form .message').val();
         var email = $('.rl-inquiry-form .email').val();
+        $(this).prop('disabled', true);
         if(!name.trim().length) {
             $('.rl-inquiry-form .name').addClass('errorBorder');
             formFlag = false;
         }
-        if (phone != undefined && !phone.trim().length) {
-            if(!email.trim().length){
-                $('.rl-inquiry-form .phone').addClass('errorBorder');
-                formFlag = false;
-            }
-        } else if (phone != undefined && !phone.match(phoneRegex)) {
+        if(phone == undefined && email == undefined){
+            $('.rl-inquiry-form .phoneEmail').addClass('errorBorder');
+            formFlag = false;
+        }
+        if (phone != undefined && phone.trim().length && !phone.match(phoneRegex)) {
             $('.rl-inquiry-form .phone').addClass('errorBorder');
             formFlag = false;
         }
@@ -54,25 +55,29 @@ jQuery(document).ready(function($) {
         }
         if (formFlag){
             $('.rl-inquiry-form .patientInquiryForm').submit();
+            $(this).prop('disabled', true);
             return true;
         }
+        $(this).prop('disabled', true);
         return false;
     });
 
     $(document).on('change','.rl-inquiry-form form :input',function(){
-        $(this).css('border','1px solid black');
+        // $(this).css('border','1px solid black');
+        $(this).removeClass('errorBorder');
         if($(this).hasClass('phoneEmail')){
             if($(this).val().match(phoneRegex)) {
                 $('.rl-inquiry-form .phoneEmailLabel').text('Mobile Phone');
                 $('.rl-inquiry-form .emailPhoneLabel').text('Email');
-                $('.rl-inquiry-form .phoneEmail').addClass('phone').removeClass('email');
-                $('.rl-inquiry-form .emailPhone').addClass('email').removeClass('phone');
+                $('.rl-inquiry-form .phoneEmail').attr('name', 'phone').addClass('phone').removeClass('email');
+                $('.rl-inquiry-form .emailPhone').attr('name', 'email').addClass('email').removeClass('phone');
             } else if($(this).val().match(emailRegex)){
                 $('.rl-inquiry-form .phoneEmailLabel').text('Email');
                 $('.rl-inquiry-form .emailPhoneLabel').text('Mobile Phone');
-                $('.rl-inquiry-form .phoneEmail').addClass('email').removeClass('phone');
-                $('.rl-inquiry-form .emailPhone').addClass('phone').removeClass('email');
+                $('.rl-inquiry-form .phoneEmail').attr('name', 'email').addClass('email').removeClass('phone');
+                $('.rl-inquiry-form .emailPhone').attr('name', 'phone').addClass('phone').removeClass('email');
             } else {
+                $(this).addClass('errorBorder');
                 $('.rl-inquiry-form .phoneEmailLabel').text('Mobile Phone or Email for slower response');
                 $('.rl-inquiry-form .emailPhoneLabel').text('Email');
                 $('.rl-inquiry-form .email').removeClass('email');

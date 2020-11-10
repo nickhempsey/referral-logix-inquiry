@@ -92,16 +92,17 @@
 .rl-inquiry-box input[type=text] {
     padding-left: 5px;
 }
-
-
 .rl-inquiry-header {
-    height: 50px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color:#6b95de;
     color:#fff;
     border-radius: 14px 14px 0px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
 .rl-inquiry-subHead {
     font-size: 12px;
@@ -131,7 +132,9 @@
     padding-bottom: 8px;
 }
 .rl-inquiry-footer {
-    height: 45px;
+    display: flex;
+    justify-content: space-around;
+    height: 40px;
     border-top: 1px solid;
     background-color:#fff;
     display: flex;
@@ -153,19 +156,23 @@
     border: 2px outset;
     position: absolute;
     width: 89%;
-    top: 250px;
+    top: 292px;
     font-size: 15px;
     border-radius: 8px;
     font-weight: bold;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    margin-left: 9px;
+    margin-left: 21px;
     justify-content: space-between;
     box-shadow: 2px 2px #888888;
 }
 .rl-inquiry .footerImage {
-    height: 34px;
+    height: 24px;
+}
+.rl-inquiry .footerText {
+    font-size: 12px;
+    font-weight: 620;
 }
 .rl-inquiry .form-group {
     padding:8px 5px 8px 5px;
@@ -178,7 +185,7 @@
     width:120px;
     font-weight: 500;
 }
-.rl-inquiry .errorBorder {
+.rl-errorBorder {
     border:1px solid red !important;
 }
 .adminSubmit {
@@ -187,4 +194,10 @@
 }
 .rl-inquiry-shadow {
     box-shadow: 0px 0px 7px 8px rgba(0,0,0,.1);
+}
+.alertText{
+    text-align: center;
+}
+.orgLogo{
+    width: 25%;
 }
