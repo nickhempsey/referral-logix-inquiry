@@ -19,6 +19,9 @@ function referrallogix_frontend_inquiry_form() {
 	$popup = get_option('referrallogix_popup');
 	$popupText = get_option('referrallogix_popup_text');
 	$popupImage = get_option('referrallogix_popup_image');
+	$iconBg = get_option('referrallogix_icon_bg');
+	$iconModel = get_option('referrallogix_icon_model');
+
 	?>
 
 	<?php
@@ -28,10 +31,10 @@ function referrallogix_frontend_inquiry_form() {
 		];
 
 		$root_path = plugin_dir_url( __FILE__ );
-		$apiResponse = 'displayNone';    
+		$apiResponse = 'displayNone';
 		$apiResponseMessage = '';
 		$apiResponseFlag = false;
-	
+
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			$post = [
 				'QSI' => $qsiKey,
@@ -44,7 +47,6 @@ function referrallogix_frontend_inquiry_form() {
 				'dob'=> $_REQUEST['dob'],
 				'payment'=> $_REQUEST['payment'],
 			];
-	
 			$ch = curl_init('https://app.referralogix.net/api/events/index.cfm?endpoint=/newInquiry/0&');
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
@@ -54,23 +56,26 @@ function referrallogix_frontend_inquiry_form() {
 			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
 			$response = curl_exec($ch);
 			curl_close($ch);
-	
+
 			$apiResponseFlag = true;
-			
+
 			// Testing response
-			//echo '<pre>'.print_r($response, true).'</pre>';
-	
+			// echo '<pre>start --------------></pre>';
+			// echo var_dump($response);
+			// echo '<pre>end --------------></pre>';
+			// die;
+
 			if(json_validate($response) != 'Invalid JSON.'){
-				$apiResponseMessage = json_decode($response)[0]->MESSAGE;
+				$apiResponseCode = json_decode($response)[0]->APISTATUS;
+				$apiResponseMessage = 'Message submitted successfully.';
 			} else {
 				$apiResponseMessage = 'Unable to connect to server at this time.  Please try again later';
 			}
 			$apiResponse = '';
 		}
-		
-		
+
 		$inquiryStatus = $apiResponse == 'displayNone' ? 'closed' : 'open';
-	
+
 		?>
 		<html>
 			<head>
@@ -80,7 +85,6 @@ function referrallogix_frontend_inquiry_form() {
 				<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 			</head>
 			<body>
-
 				<div class="rl-inquiry rl-inquiry-form <?= $apiResponse; ?>" data-status="<?= $inquiryStatus; ?>" style="background-color:<?= $bodyBg ?>!important">
 					<div class="rl-inquiry-header" style="background-color: <?= $headerBg ?> !important; color:<?= $headerFont ?> !important">
 						<img src="<?= $headerLogo; ?>" alt="Logo" class="orgLogo <?php echo ($headerTextPos != "left") ? 'displayNone':'';?>">
@@ -119,7 +123,7 @@ function referrallogix_frontend_inquiry_form() {
 										<?php } ?>
 										<?php if($dob == 2) { ?>
 											<div class="formInputGroup">
-												<input name="date" type="text" onfocus="(this.type='date')"  class="dobBox dob">
+												<input name="date" type="text" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" class="dobBox dob">
 												<label class="formLabel">Date Of Birth</label>
 											</div>
 										<?php } ?>
@@ -160,7 +164,7 @@ function referrallogix_frontend_inquiry_form() {
 									<?php } ?>
 									<?php if($dob == 1) { ?>
 										<div class="formInputGroup">
-											<input type="text" name="dob" class="dobBox dob optional" required="" onfocus="(this.type='date')" >
+											<input type="text" name="dob" class="dobBox dob optional" required="" onfocus="(this.type='date')" onfocusout="(this.type='text')">
 											<label class="formLabel emailPhoneLabel">Date Of Birth</label>
 										</div>
 									<?php } ?>
@@ -210,10 +214,15 @@ function referrallogix_frontend_inquiry_form() {
 					</div>
 					<div class="rl-inquiry-footer">
 						<img src="<?= $root_path;?>/assets/images/rlogix.png" class="footerImage">
-						<div class="footerText">v3.0 (c) 2020</div>
-						<div class="footerTerms">Subject to <a href="https://www.referralogix.com/acceptable_use" target="_blank">Terms</a></div>
+						<div class="footerText">v2.0 (c) 2020</div>
+						<div class="footerTerms">Subject to <a href="https://www.referralogix.com/acceptable_use">Terms</a></div>
 					</div>
 				</div>
+				<?= 
+				var_dump($popupText);
+				var_dump($popupImage);
+
+				?>
 				<div class="tooltip-head <?= (($popupText == "") && ($popupImage == "")) ? "displayNone" : "" ?>">
 					<div class="tooltip-content clearfix bg-white rounded">
 						<div class="tooltip-image <?= ($popupImage == "") ? "displayNone" : "" ?>">
@@ -223,13 +232,13 @@ function referrallogix_frontend_inquiry_form() {
 					</div>
 					<div class="arrow-down"></div>
 				</div>
-				<div class="rl-inquiry-popup-opener" data-status="<?= $inquiryStatus; ?>">
-
-					<svg class="rl-inquiry-open" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg="" ><path  fill="#ffffff" d="M192 416c0 17.7-14.3 32-32 32s-32-14.3-32-32 14.3-32 32-32 32 14.3 32 32zM320 48v416c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V48C0 21.5 21.5 0 48 0h224c26.5 0 48 21.5 48 48zm-32 0c0-8.8-7.2-16-16-16H48c-8.8 0-16 7.2-16 16v416c0 8.8 7.2 16 16 16h224c8.8 0 16-7.2 16-16V48z"></path></svg>
+				<div class="rl-inquiry-popup-opener" style="background-color: <?= $iconBg ?> !important;" data-status="<?= $inquiryStatus; ?>">
+					<img src="<?= $root_path;?>/assets/images/<?= $iconModel?>" class="rl-inquiry-open logoImg" >
 
 					<svg class="rl-inquiry-close" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="#ffffff" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z"></path></svg>
 
 				</div>
+				<div class="loader displayNone"></div>
 			</body>
 		</html>
 		<?php

@@ -27,6 +27,8 @@ function referrallogix_inquiry_plugin_settings_page() {
    $popup = get_option('referrallogix_popup');
    $popupText = get_option('referrallogix_popup_text');
    $popupImage = get_option('referrallogix_popup_image');
+   $iconBg = get_option('referrallogix_icon_bg');
+   $iconModel = get_option('referrallogix_icon_Model');
    $root_path = plugin_dir_url( __FILE__ );
    
    if(is_bool($headerBg)){
@@ -61,6 +63,14 @@ function referrallogix_inquiry_plugin_settings_page() {
 	   add_option('referrallogix_header_text_pos',"none");
 	   $headerTextPos = "none";
 	}
+	if(is_bool($iconBg)){
+		add_option('referrallogix_icon_bg','#2152b8');
+		$iconBg = '#2152b8';
+	}
+	if(is_bool($iconModel)){
+		add_option('referrallogix_icon_model','image0-L.png');
+		$iconModel = 'image0-L.png';
+	}
 
    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		if(isset($_POST['update']) && trim($_POST['update']) != 1) {
@@ -78,6 +88,7 @@ function referrallogix_inquiry_plugin_settings_page() {
 				add_option('referrallogix_popup',trim($_POST['popup_fade']));
 				add_option('referrallogix_popup_text',trim($_POST['popup_text']));
 				add_option('referrallogix_popup_image',trim($_POST['popup_image']));
+				add_option('referrallogix_icon_model',trim($_POST['iconModel']));
 				
 			} else {
 				update_option('referrallogix_qsi_key',trim($_POST['site_qsi']));
@@ -98,6 +109,8 @@ function referrallogix_inquiry_plugin_settings_page() {
 				update_option('referrallogix_popup',trim($_POST['popup_fade']));
 				update_option('referrallogix_popup_text',trim($_POST['popup_text']));
 				update_option('referrallogix_popup_image',trim($_POST['popup_image']));
+				update_option('referrallogix_icon_bg',trim($_POST['iconBg']));
+				update_option('referrallogix_icon_model',trim($_POST['iconModel']));
 			}
 			$apiKey = get_option('referrallogix_api_key');
 			$qsiKey = get_option('referrallogix_qsi_key');
@@ -117,54 +130,91 @@ function referrallogix_inquiry_plugin_settings_page() {
 			$popup = get_option('referrallogix_popup');
 			$popupText = get_option('referrallogix_popup_text');
 			$popupImage = get_option('referrallogix_popup_image');
+			$iconBg = get_option('referrallogix_icon_bg');
+			$iconModel = get_option('referrallogix_icon_model');
 		}
 	}
 ?>
 
 	<form class="form-table" action="" method="post" id="referrallogixInquiry">
-		<table class="form-table">
+		<table class="form-table rl-formTable">
 			<tbody>
-				<tr valign="top">
-					<td colspan="2">
-						<h3 class="sendgrid-settings-top-header">Referralogix Inquiry Settings</h3>
+				<tr align="center" >
+					<td colspan="2" class="sendgrid-settings-top-header">
+						<h3>Referralogix Inquiry Plugin Settings</h3>
 					</td>
 				</tr>
-				<tr valign="top" class="qsi-key">
+
+				<tr valign="top">
+					<td colspan="2" class="sendgrid-settings-header"><h3 ><b>Credentials</b></h3></td>
+				</tr>
+
+				<tr valign="top" class="qsi-key popupTop popupLeft popupRight">
 					<td scope="row">Site QSI</td>
 					<td>
 						<input type="text" class="regular-text" id="site_qsi" placeholder="Enter your QSI" name="site_qsi" value="<?= $qsiKey; ?>" maxlength="4">
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupBottom popupLeft popupRight ">
 					<td scope="row">API Key</td>
 					<td>
 						<input type="password" class="regular-text" id="api_key" placeholder="Enter your api key" name="api_key" value="<?= $apiKey; ?>" maxlength="36">
 					</td>
 				</tr>
+				
+				<tr valign="top">
+					<td colspan="2" class="sendgrid-settings-header"><h3><b>Icon Presentation</b></h3></td>
+				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupTop popupLeft popupRight">
 					<td scope="row">Popup Text</td>
 					<td>
 						<input type="Text" class="regular-text" id="popup_text" placeholder="Enter the text for popup" name="popup_text" value="<?= $popupText; ?>" maxlength="200">
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Popup Image</td>
 					<td>
 						<input type="Text" class="regular-text popup_image" id="popup_img" placeholder="To include an image in the popup, enter image URL" name="popup_image" value="<?= $popupImage; ?>">
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Popup Fades After</td>
 					<td>
 						<input type="number" class="regular-text" id="popup_fade" name="popup_fade" value="<?= ($popup == "") ? 0 : $popup ?>"; style="width:80px;text-align:right">&nbsp;Seconds (0 = Does not fade)
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
+					<td scope="row">Model Icon</td>
+					<td>
+						<?php
+						for ($x = 0; $x <= 6; $x+=1) {?>
+							<input type="radio" name="iconModel" value="image<?php echo $x; ?>-L.png" <?php echo ($iconModel=="image$x-L.png") ? 'checked="checked"':'';?>>
+							<label for="icon"><img class="iconModelImg" src="<?= $root_path;?>/assets/images/image<?php echo $x; ?>-L.png"></label>
+
+							<input type="radio" name="iconModel" value="image<?php echo $x; ?>-D.png" <?php echo ($iconModel=="image$x-D.png") ? 'checked="checked"':'';?>>
+							<label for="icon"><img class="iconModelImg"  src="<?= $root_path;?>/assets/images/image<?php echo $x; ?>-D.png"></label>
+							<?php if (($x == 1) || ($x == 3) || ($x == 5) || ($x == 7)) {?><br><?php }?>
+						<?php }?>
+					</td>
+				</tr>
+
+				<tr valign="top" class="api-key popupBottom popupLeft popupRight">
+					<td scope="row">Model Icon Background</td>
+					<td>
+						<input type="color" id="iconBg" name="iconBg" value="<?= $iconBg; ?>">
+					</td>
+				</tr>
+
+				<tr valign="top">
+					<td colspan="2" class="sendgrid-settings-header"><h3><b>Plugin Appearance & Branding</b></h3></td>
+				</tr>
+
+				<tr valign="top" class="api-key popupTop popupLeft popupRight" >
 					<td scope="row">Include Logo in Header</td>
 					<td>
 						<input type="radio" id="noLogo" name="logoPos" value="none" <?php echo ($headerTextPos=="none") ? 'checked="checked"':'';?>>
@@ -176,65 +226,67 @@ function referrallogix_inquiry_plugin_settings_page() {
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Logo URL</td>
 					<td>
 						<input type="text" class="regular-text" id="headerLogo" placeholder="Enter an URL for logo" name="logoUrl" value="<?= $headerLogo; ?>">
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Header Text</td>
 					<td>
 						<input type="text" class="regular-text" id="headerText" placeholder="Enter a header text for the plugin" name="headerText" value="<?= str_replace("\'","'",$headerText); ?>">
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Header Background Color</td>
 					<td>
 						<input type="color" id="headerBg" name="headerBg" value="<?= $headerBg; ?>">
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Header Text Color</td>
 					<td>
 						<input type="color" id="headerFont" name="headerFont" value="<?= $headerFont; ?>">
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Body Background Color</td>
 					<td>
 						<input type="color" id="bodyBg" name="bodyBg" value="<?= $bodyBg; ?>">
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Body Text Color</td>
 					<td>
 						<input type="color" id="bodyFont" name="bodyFont" value="<?= $bodyFont; ?>">
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Button Color</td>
 					<td>
 						<input type="color" id="buttonBg" name="buttonBg" value="<?= $buttonBg; ?>">
 					</td>
 				</tr>
 
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupBottom popupLeft popupRight">
 					<td scope="row">Button Text Color</td>
 					<td>
 						<input type="color" id="buttonText" name="buttonText" value="<?= $buttonFont; ?>">
 					</td>
 				</tr>
+
 				<tr valign="top" class="api-key">
-					<td scope="row"><h3><b>Additional Fields</b></h3></td>
+					<td scope="row" class="sendgrid-settings-header"><h3><b>Additional Fields</b></h3></td>
 				</tr>
-				<tr valign="top" class="api-key">
+
+				<tr valign="top" class="api-key popupTop popupLeft popupRight">
 					<td scope="row">Address</td>
 					<td>
 						<input type="radio" id="noLogo" name="Address" value="0"<?php echo ($address=="0") ?'checked="checked"':'';?> >
@@ -245,7 +297,7 @@ function referrallogix_inquiry_plugin_settings_page() {
 						<label for="male">Required</label><br>
 					</td>
 				</tr>
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Insurer</td>
 					<td>
 						<input type="radio" id="noLogo" name="Insurer" value="0" <?php echo ($insurer=="0") ?'checked="checked"':'';?>>
@@ -256,7 +308,7 @@ function referrallogix_inquiry_plugin_settings_page() {
 						<label for="male">Required</label><br>
 					</td>
 				</tr>
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupLeft popupRight">
 					<td scope="row">Date of Birth</td>
 					<td>
 						<input type="radio" id="noLogo" name="dob" value="0" <?php echo ($dob=="0") ? 'checked="checked"':'';?>>
@@ -267,7 +319,7 @@ function referrallogix_inquiry_plugin_settings_page() {
 						<label for="male">Required</label><br>
 					</td>
 				</tr>
-				<tr valign="top" class="api-key">
+				<tr valign="top" class="api-key popupBottom popupLeft popupRight">
 					<td scope="row">Payment / Plan</td>
 					<td>
 						<input type="radio" id="noLogo" name="payment" value="0" <?php echo ($payment=="0") ? 'checked="checked"':'';?>>
@@ -278,6 +330,7 @@ function referrallogix_inquiry_plugin_settings_page() {
 						<label for="male">Required</label><br>
 					</td>
 				</tr>
+				
 			</tbody>
 		</table>
 		

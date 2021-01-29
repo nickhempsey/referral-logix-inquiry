@@ -4,11 +4,6 @@ jQuery(document).ready(function($) {
     var	emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     var popup = $('.rl-inquiry-form .popup').val();
 
-    $(document).on('focusout','.dob',function(){
-        if(!$(this).val().length)
-            $('.dob').get(0).type = 'text';
-    })
-
     $(document).on('click','.expandFormButton',function () {
         $('.moreForm').removeClass('displayNone');
         $('.expandForm').addClass('displayNone');
@@ -32,6 +27,23 @@ jQuery(document).ready(function($) {
         }
     });
 
+    $(document).on('change','.rl-inquiry-form .name, .rl-inquiry-form .phone, .rl-inquiry-form .message, .rl-inquiry-form .email,.rl-inquiry-form .address, .rl-inquiry-form .insurerBox, .rl-inquiry-form .dob, .rl-inquiry-form .paymentBox', function(){
+        if($(this).hasClass('phone') && $(this).val().trim().match(phoneRegex) != null){
+            if(($('.rl-inquiry-form .email').val().trim().length && $('.rl-inquiry-form .email').val().trim().match(emailRegex) != null) || (!$('.rl-inquiry-form .email').val().trim().length))
+                $('.rl-inquiry-form .phone, .rl-inquiry-form .email').removeClass('rl-errorBorder');
+            else
+                $('.rl-inquiry-form .phone').removeClass('rl-errorBorder');
+        } else if($(this).hasClass('email') && $(this).val().trim().match(emailRegex) != null){
+            // $('.rl-inquiry-form .email, .rl-inquiry-form .phone').removeClass('rl-errorBorder');
+            if(($('.rl-inquiry-form .phone').val().trim().length && $('.rl-inquiry-form .phone').val().trim().match(phoneRegex) != null) || (!$('.rl-inquiry-form .phone').val().trim().length))
+                $('.rl-inquiry-form .email, .rl-inquiry-form .phone').removeClass('rl-errorBorder');
+            else
+                $('.rl-inquiry-form .email').removeClass('rl-errorBorder');
+        }else if((!$(this).hasClass('phone') && !$(this).hasClass('email')) && $(this).val().trim().length){
+            $(this).removeClass('rl-errorBorder');
+        }
+    });
+    
     $(document).on('click','.rl-inquiry-form .rl-inquiry-submit', function () {
         var formFlag = true;
         var name = $('.rl-inquiry-form .name').val();
@@ -42,29 +54,29 @@ jQuery(document).ready(function($) {
         var dob = $('.rl-inquiry-form .dob').val();
         var insurer = $('.rl-inquiry-form .insurerBox').val();
         var payment = $('.rl-inquiry-form .paymentBox:checked').val();
-
         $(this).prop('disabled', true);
         if(!name.trim().length) {
+            console.log('name',name);
             $('.rl-inquiry-form .name').addClass('rl-errorBorder');
             formFlag = false;
         }
-        if(phone == undefined || email == undefined){
-            $('.rl-inquiry-form .phoneEmail').addClass('rl-errorBorder');
-            formFlag = false;
+        if( !phone.trim().length && !email.trim().length ){
+            $('.rl-inquiry-form .phone, .rl-inquiry-form .email').addClass('rl-errorBorder');
         }
-        if (phone != undefined && !phone.trim().length && !phone.match(phoneRegex)) {
+        if (phone.trim().length && phone.match(phoneRegex) == null) {
             $('.rl-inquiry-form .phone').addClass('rl-errorBorder');
             formFlag = false;
         }
-        if(!message.trim().length) {
-            $('.rl-inquiry-form .message').addClass('rl-errorBorder');
-            formFlag = false;
-        }
-        if (email != undefined && !email.trim().length && !email.match(emailRegex)){
+        if (email.trim().length && email.match(emailRegex) == null){
             $('.rl-inquiry-form .email').addClass('rl-errorBorder');
             formFlag = false;
         }
-        if (address != undefined && !address.trim().length && !$('.rl-inquiry-form .address').hasClass('optional')) {   
+        if(!message.trim().length) {
+            console.log('message',message);
+            $('.rl-inquiry-form .message').addClass('rl-errorBorder');
+            formFlag = false;
+        }
+        if (address != undefined && !address.trim().length && !$('.rl-inquiry-form .address').hasClass('optional')) {
             $('.rl-inquiry-form .address').addClass('rl-errorBorder');
             formFlag = false;
         }
@@ -80,10 +92,12 @@ jQuery(document).ready(function($) {
             $('.rl-inquiry-form .paymentBox').addClass('rl-errorBorder');
             formFlag = false;
         }
+
         if (formFlag){
+            $('.loader').removeClass('displayNone');
             $('.rl-inquiry-form .patientInquiryForm').submit();
             $(this).prop('disabled', true);
-            return true;
+            return false;
         }
         $(this).prop('disabled', false);
         return false;

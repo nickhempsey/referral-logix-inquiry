@@ -65,7 +65,7 @@
     height: 33px;
     width: 100%;
     border-radius: 4px !important;
-    border: 1px solid !important;
+    border: 1px solid;
     outline: none !important;
 }
 
@@ -82,7 +82,7 @@
     height: 78px;
     width: 100%;
     border-radius: 4px !important;
-    border: 1px solid !important;
+    border: 1px solid;
     outline: none !important;
 }
 .rl-inquiry-box .addressBox {
@@ -301,4 +301,74 @@
 }
 .form-check-label{
     margin-bottom: 19px !important;
+}
+.rl-inquiry-popup-opener img {
+    width:29px;
+}
+#referrallogixInquiry .iconModelImg {
+    padding: 1px;
+    border-radius: 5px;
+}
+#referrallogixInquiry img {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+}
+
+.popupTop {
+    border-top: thin solid #7e8993;
+}
+
+.popupBottom {
+    border-bottom: thin solid #7e8993;
+}
+
+.popupLeft {
+    border-left: thin solid #7e8993;
+}
+
+.popupRight {
+    border-right: thin solid #7e8993;
+}
+
+.rl-formTable{
+    width: 98%;
+}
+#referrallogixInquiry .sendgrid-settings-top-header {
+    padding: 0px !important;
+    font-size: 21px !important;
+    line-height: 0 !important;
+}
+#referrallogixInquiry .sendgrid-settings-header {
+    padding: 10px 10px !important;
+}
+.loader {
+    display: block;
+    position: fixed;
+    right: 23vh;
+    bottom: 39vh;
+    z-index: 1000000;
+    border: 10px solid #ffffff;
+    border-radius: 50%;
+    border-top: 10px solid #337ab7;
+    border-bottom: 10px solid #337ab7;
+    width: 40px;
+    height: 40px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+@media (min-width: 768px) and (max-width: 1366px) {
+    .loader {
+        right: 33vh !important;
+    }
+}
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
